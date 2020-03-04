@@ -14,42 +14,45 @@
 #-letter key and returns the possible strings.-**
 #-In some cases the program may ask for the-*****
 #-third rotor when amassing keyes.-**************
-#####-Updated:2020-02-21-************************
-#####-Version:1.01-******************************
+#####-Updated:2020-03-03-************************
 
 import argparse
+import os
 import types
 
 helpmsg = "usage: ./[programName] [opts] \n Options: \n -h : Help; prints help information on this program. \n -v : Verbose; Prints usage instructions during all steps of program execution. \n \n "
 
-words={
-  "ab": "about",
-  "af": "after",
-  "ag": "again",
-  "be": "below",
-  "co": "could",
-  "ev": "every",
-  "fi": "first",
-  "fo": "found",
-  "gr": "great",
-  "ho": "house",
-  "la": "large",
-  "le": "learn",
-  "ne": "never",
-  "ot": "other",
-  "pl": "place/plant",
-  "po": "point",
-  "ri": "right",
-  "sm": "small",
-  "so": "sound",
-  "sp": "spell",
-  "st": "still/study",
-  "th": "their/there/these/thing/think/three",
-  "wa": "water",
-  "wh": "where/which",
-  "wo": "world/would",
-  "wr": "write"
-}
+#TODO; for Ver. 2: Convert dictionary 'words' into a list.
+#   create checks fo each rotor
+#   Write operations for 'Verbose mode' then copy into silent
+
+# List of possible solutions to KTANE Passwords module
+words=["about", "after", "again", "below", "could", "every", "first", "found", "great", "house", "large", "learn", "never", "other", "place", "plant", "point", "right", "small", "sound", "spell", "still", "study", "their", "there", "these", "thing", "think", "three", "water", "where", "which", "world", "would", "write"]
+
+# define our clear function 
+def clear(): 
+  
+    # for windows 
+    if os.name == 'nt': 
+        _ = os.system('cls') 
+  
+    # for mac and linux(here, os.name is 'posix') 
+    else: 
+        _ = os.system('clear') 
+
+def removeDuplicates(listofElements):
+    
+    # Create an empty list to store unique elements
+    uniqueList = []
+    
+    # Iterate over the original list and for each element
+    # add it to uniqueList, if its not already there.
+    for elem in listofElements:
+        if elem not in uniqueList:
+            uniqueList.append(elem)
+    
+    # Return the list of unique elements        
+    return uniqueList
 
 def rotIn():
     rotorString = input("$>")
@@ -60,7 +63,7 @@ def rotIn():
     return rotorString
 # END_FUNC: rotIn()
 
-def firstRotor(rotorString):
+def firstRotor(rotorString): # String
     candidateString = ""
     for can in rotorString:
         #print(can) # TEST PRINT
@@ -74,7 +77,7 @@ def firstRotor(rotorString):
     return candidateString
 # END_FUNC: firstRotor()
 
-def secondRotor(rotorString):
+def secondRotor(rotorString): # String
     candidateString = ""
     for can in rotorString:
         #print(can) # TEST PRINT
@@ -88,55 +91,144 @@ def secondRotor(rotorString):
     return candidateString
 # END_FUNC: secondRotor()
 
-# TODO: Add methods for thirdRotor and fourth
+def thirdRotor(rotorString): # String
+    candidateString = ""
+    for can in rotorString:
+        #print(can) # TEST PRINT
+        if can in "bcdfjkmnpqswxyz":
+            #print(can) # TEST PRINT
+            continue
+        else:
+            candidateString = candidateString + can
+        # END_IF
+    # END_LOOP
+    return candidateString
+# END_FUNC: thirdRotor()
 
-def search3(rotCom):
-    rotThree = rotIn()
-    #TODO: Make dictionaries for three letters
+def fourthRotor(rotorString): # String
+    candidateString = ""
+    for can in rotorString:
+        #print(can) # TEST PRINT
+        if can in "bfjkmpqvwxyz":
+            #print(can) # TEST PRINT
+            continue
+        else:
+            candidateString = candidateString + can
+        # END_IF
+    # END_LOOP
+    return candidateString
+# END_FUNC: fourthRotor()
 
-def search4(rotCom):
-    rotFour = rotIn()
-    #TODO: Make dictionary for four letters
+def fifthRotor(rotorString): # String
+    candidateString = ""
+    for can in rotorString:
+        #print(can) # TEST PRINT
+        if can in "abcfijmopqsuvxy":
+            #print(can) # TEST PRINT
+            continue
+        else:
+            candidateString = candidateString + can
+        # END_IF
+    # END_LOOP
+    return candidateString
+# END_FUNC: fifthRotor()
 
-def search2(rotorOne, rotorTwo):
+def search(rotorOne, rotorTwo, verbosity, round): #String, String, Boolean, unsigned Int
+    wList = []
     for lett in rotorOne:
         for tter in rotorTwo:
             sigil = lett + tter
-            if sigil in words:
-                print("Your Password is: ", words[sigil])
+            wList.append(sigil)
+        # END_LOOP_INNER
+    # END_LOOP_OUTER
+    for lead in wList:
+        for word in words:
+            if lead in word[0:round]:
+                if verbosity == True:
+                    print("Your Password is: ", word)
+                else:
+                    print("+++", word)
             else:
                 continue
             # END_IF
-        # END_LOOP
-    # END_LOOP
+        #END_LOOP_INNER
+    # END_LOOP_OUTER
+    return wList
 # END_FUNC: search2()
 
 #++++++++++Main_Function_Block++++++++++
-parser = argparse.ArgumentParser(description='This program is intended for use with the game "Keep Talking and No One Explodes". It takes two strings of 5 characters -- no white spaces -- from the rotors of the "On the Subject of Passwords" module. The program then generates a sorted list of dictionary keyes and and returns the match(es). In the Event that the matched key has more than one associated word, the program may ask for the thrid rotor before providing more instructions.')
+def main():
+    parser = argparse.ArgumentParser(description='This program is intended for use with the game "Keep Talking and Nobody Explodes". It takes two strings of 5 characters -- no white spaces -- from the rotors of the "On the Subject of Passwords" module. The program then generates a sorted list of dictionary keyes and and returns the match(es). In the Event that the matched key has more than one associated word, the program may ask for the thrid rotor before providing more instructions.')
 
-parser.add_argument("-v", "--verbose", help="Prints additional messages.", action="store_true")
+    parser.add_argument("-v", "--verbose", help="Prints additional messages.", action="store_true")
 
-args = parser.parse_args()
+    args = parser.parse_args()
 
-if args.verbose == True:
-    print("Hello World")
-    print("What is the first rotor? -- No whitespaces.")
-    rotOne = rotIn()
-    rotOne = firstRotor(rotOne)
-    print("What is the second rotor? -- No whitespaces.")
-    rotTwo = rotIn()
-    rotTwo = secondRotor(rotTwo)
-    # print(rotOne, "+", rotTwo) # TEST PRINT
-    search2(rotOne, rotTwo)
-    print("Buh-Bye")
-else:
-    rotOne = rotIn()
-    rotOne = firstRotor(rotOne)
-    
-    rotTwo = rotIn()
-    rotTwo = secondRotor(rotTwo)
-    # print(rotOne, "+", rotTwo) # TEST PRINT
-    search2(rotOne, rotTwo)
-# END_IF
+    if args.verbose == True:
+        print("What is the first rotor? -- No whitespaces.")
+        rotOne = rotIn()
+        rotOne = firstRotor(rotOne)
+        print("What is the second rotor? -- No whitespaces.")
+        rotTwo = rotIn()
+        rotTwo = secondRotor(rotTwo)
+        #print(rotOne, "+", rotTwo) #TEST PRINT
+        searchList = search(rotOne, rotTwo, args.verbose, 2)
+        
+        print("What is the third rotor? -- No whitespaces.")
+        rotThree = rotIn()
+        if (len(rotThree) == 0):
+          return None
+        rotThree = thirdRotor(rotThree)
+        searchList = search(searchList, rotThree, args.verbose, 3)
+        
+        print("What is the fourth rotor? -- No whitespaces.")
+        rotFour = rotIn()
+        if (len(rotFour) == 0):
+          return None
+        rotFour = fourthRotor(rotFour)
+        searchList = search(searchList, rotFour, args.verbose, 4)
+        
+        print("What is the fifth rotor? -- No whitespaces.")
+        rotFive = rotIn()
+        if (len(rotFive) == 0):
+          return None
+        rotFive = fifthRotor(rotFive)
+        searchList = search(searchList, rotFive, args.verbose, 5)
+    else:
+
+        rotOne = rotIn()
+        rotOne = firstRotor(rotOne)
+
+        rotTwo = rotIn()
+        rotTwo = secondRotor(rotTwo)
+
+        #print(rotOne, "+", rotTwo) # TEST PRINT
+        searchList = search(rotOne, rotTwo, args.verbose, 2)
+
+        rotThree = rotIn()
+        if (len(rotThree) == 0):
+          return None
+        rotThree = thirdRotor(rotThree)
+        searchList = search(searchList, rotThree, args.verbose, 3)
+        
+        rotFour = rotIn()
+        if (len(rotFour) == 0):
+          return None
+        rotFour = fourthRotor(rotFour)
+        searchList = search(searchList, rotFour, args.verbose, 4)
+        
+        rotFive = rotIn()
+        if (len(rotFive) == 0):
+          return None
+        rotFive = fifthRotor(rotFive)
+        searchList = search(searchList, rotFive, args.verbose, 5)
+    # END_IF
 
 #++++++++++END_OF_MAIN_FUNCTION_BLOCK++++++++++
+if __name__ == "__main__":
+    while True:
+        clear()
+        main()
+        input("Press 'q' to Quit, Anything else Continue...")
+    # END_WHILE
+# END_IF
