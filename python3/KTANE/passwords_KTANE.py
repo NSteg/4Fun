@@ -14,6 +14,7 @@
 #-letter key and returns the possible strings.-**
 #-In some cases the program may ask for the-*****
 #-third rotor when amassing keyes.-**************
+#####-Version:2.00.10-***************************
 #####-Updated:2020-03-03-************************
 
 import argparse
@@ -229,6 +230,8 @@ if __name__ == "__main__":
     while True:
         clear()
         main()
-        input("Press 'q' to Quit, Anything else Continue...")
+        exitVar = input("Press 'q' to Quit, Anything else Continues... ")
+        if exitVar == 'q':
+          exit()
     # END_WHILE
 # END_IF
