@@ -14,18 +14,14 @@
 #-letter key and returns the possible strings.-**
 #-In some cases the program may ask for the-*****
 #-third rotor when amassing keyes.-**************
-#####-Version:2.00.10-***************************
-#####-Updated:2020-03-03-************************
+#####-Version:2.00.11-***************************
+#####-Updated:2020-03-21-************************
 
 import argparse
 import os
 import types
 
 helpmsg = "usage: ./[programName] [opts] \n Options: \n -h : Help; prints help information on this program. \n -v : Verbose; Prints usage instructions during all steps of program execution. \n \n "
-
-#TODO; for Ver. 2: Convert dictionary 'words' into a list.
-#   create checks fo each rotor
-#   Write operations for 'Verbose mode' then copy into silent
 
 # List of possible solutions to KTANE Passwords module
 words=["about", "after", "again", "below", "could", "every", "first", "found", "great", "house", "large", "learn", "never", "other", "place", "plant", "point", "right", "small", "sound", "spell", "still", "study", "their", "there", "these", "thing", "think", "three", "water", "where", "which", "world", "would", "write"]
@@ -41,6 +37,8 @@ def clear():
     else: 
         _ = os.system('clear') 
 
+
+# TODO: Find A Way to Remove duplicate letter combinations
 def removeDuplicates(listofElements):
     
     # Create an empty list to store unique elements
@@ -134,6 +132,9 @@ def fifthRotor(rotorString): # String
     return candidateString
 # END_FUNC: fifthRotor()
 
+
+# TODO: Find a way to delete letter combinations that do not
+#   Correspond to allowed passwords.
 def search(rotorOne, rotorTwo, verbosity, round): #String, String, Boolean, unsigned Int
     wList = []
     for lett in rotorOne:
